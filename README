@@ -1,0 +1,10 @@
+!!! HELP MacGyver to escape from the labyrinth !!!
+
+
+How to run?
+
+1. Install dependancies:
+pip install -r requirements.txt
+
+2. Launch the application:
+python macescapes.py
