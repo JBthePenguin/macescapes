@@ -3,8 +3,11 @@
 
 How to run?
 
-1. Install dependancies:
-pip install -r requirements.txt
+1.Download the directory macescapes
 
-2. Launch the application:
-python macescapes.py
+2. Install :
+- package :	pip install macescapes/.
+- dependences : pip install -r macescapes/requirements.txt
+
+3. Launch the game:
+python macescapes/macescapes.py
