@@ -1,5 +1,9 @@
+env/
+
 __pycache__/
 
 local_modules/__pycache__/
 
-env/
+local_modules/__init__.pyc
+
+local_modules/labyrinth.pyc
