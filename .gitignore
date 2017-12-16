@@ -13,3 +13,9 @@ element/__pycache__/
 element/__init__.pyc
 
 element/element.pyc
+
+game/__pycache__/
+
+game/__init__.pyc
+
+game/game.pyc
