@@ -1,8 +1,9 @@
-""" Module with the class Labyrinth"""
+#! /usr/bin/env python3
+# coding: utf-8
 
+""" Module with class Labyrinth"""
 import os
 import pygame
-
 main_dir = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -29,7 +30,6 @@ class Labyrinth():
                     x = 0
                     y += 1
                 else:
-                    # associate corresponding image
                     if elt == "O":
                         path_to_img = os.path.join(main_dir, "img", "wall.png")
                     else:

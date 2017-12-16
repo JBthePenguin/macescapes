@@ -3,7 +3,8 @@
 
 # from modules.labyrinth import Labyrinth
 # from modules import labyrinth
-import local_modules.labyrinth as labyrinth
+# import local_modules.labyrinth as labyrinth
+from labyrinth import labyrinth
 
 
 def main():

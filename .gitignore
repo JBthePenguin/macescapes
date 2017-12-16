@@ -2,8 +2,14 @@ env/
 
 __pycache__/
 
-local_modules/__pycache__/
+labyrinth/__pycache__/
 
-local_modules/__init__.pyc
+labyrinth/__init__.pyc
 
-local_modules/labyrinth.pyc
+labyrinth/labyrinth.pyc
+
+element/__pycache__/
+
+element/__init__.pyc
+
+element/element.pyc
