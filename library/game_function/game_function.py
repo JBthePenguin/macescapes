@@ -46,7 +46,37 @@ def paste_elements(window, elements):
         window.blit(img, (x, y))
 
 
-def launch(background, movable_elt, elements, available_positions):
+def move_player(player_position, background, key_event):
+    """check if the new position is possible
+    and move the player if it's ok"""
+    # create a list of possible new position
+    available_positions = create_list(background)
+    # find new position and set the movement
+    new_x = int(player_position[0]) / 40
+    new_y = int(player_position[1]) / 40
+    movement_x = 0
+    movement_y = 0
+    if key_event == K_LEFT:
+        new_x -= 1
+        movement_x = -40
+    elif key_event == K_RIGHT:
+        new_x += 1
+        movement_x = 40
+    elif key_event == K_UP:
+        new_y -= 1
+        movement_y = -40
+    elif key_event == K_DOWN:
+        new_y += 1
+        movement_y = 40
+    # check if the new position is possible and move if it's ok
+    new_position = (new_x, new_y)
+    if new_position in available_positions:
+        player_position = player_position.move(
+            movement_x, movement_y)
+    return player_position
+
+
+def launch(background, movable_elt, elements):
     """launch the game on  gui """
     # create a window
     pygame.init()
@@ -54,6 +84,7 @@ def launch(background, movable_elt, elements, available_positions):
     # create an object Rect for the player
     player = pygame.image.load(movable_elt.path_to_img).convert_alpha()
     player_position = player.get_rect(topleft=(40, 40))
+    # available_positions = create_list(background)
     # moving when the key reaims depressed
     pygame.key.set_repeat(400, 30)
     # keep the window open ...
@@ -65,14 +96,8 @@ def launch(background, movable_elt, elements, available_positions):
                 gui_display = 0
             # move the player in the correct direction
             elif event.type == KEYDOWN:
-                if event.key == K_LEFT:
-                    player_position = player_position.move(-40, 0)
-                elif event.key == K_RIGHT:
-                    player_position = player_position.move(40, 0)
-                elif event.key == K_UP:
-                    player_position = player_position.move(0, -40)
-                elif event.key == K_DOWN:
-                    player_position = player_position.move(0, 40)
+                player_position = move_player(
+                    player_position, background, event.key)
         # paste all on the window and refresh it
         paste_background(window, background)
         paste_elements(window, elements)
