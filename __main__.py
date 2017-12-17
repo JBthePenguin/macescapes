@@ -1,13 +1,16 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-# from modules.labyrinth import Labyrinth
-# from modules import labyrinth
-# import local_modules.labyrinth as labyrinth
-from labyrinth.labyrinth import Labyrinth
-from element.element import Element
-from game import game
+# from labyrinth.labyrinth import Labyrinth
+# from element.element import Element
+# from game import game
 from random import choice
+
+from library.labyrinth.labyrinth import Labyrinth
+
+from library.element.element import Element
+
+import library.game_function.game_function as game_function
 
 
 def main():
@@ -32,7 +35,7 @@ def main():
     ether = Element("ether", choice(list_available_positions))
     list_available_positions.remove(ether.position)
     elements = {mac, bad_boy, needle, tube, ether}
-    game.display(background, elements)
+    game_function.display(background, elements)
 
 
 if __name__ == "__main__":

@@ -1,9 +1,11 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+import os.path as path
 """ Module with class Labyrinth"""
-import os.path
-main_dir = os.path.dirname(os.path.dirname(__file__))
+main_dir = path.dirname(
+    path.dirname(
+        path.dirname(__file__)))
 
 
 class Labyrinth(dict):
@@ -13,7 +15,7 @@ class Labyrinth(dict):
     def __init__(self):
         """create a labyrinth"""
         # get the right path
-        path_to_file = os.path.join(
+        path_to_file = path.join(
             main_dir, "maps", "default_map.txt")
         # open the file
         with open(path_to_file, "r") as f:
@@ -28,10 +30,10 @@ class Labyrinth(dict):
                     y += 1
                 else:
                     if elt == "O":
-                        path_to_img = os.path.join(
+                        path_to_img = path.join(
                             main_dir, "img", "wall.png")
                     else:
-                        path_to_img = os.path.join(
+                        path_to_img = path.join(
                             main_dir, "img", "floor.png")
                     # add key (x,y) and value (path to the file) in background
                     self[(x, y)] = path_to_img

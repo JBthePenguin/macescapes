@@ -2,20 +2,20 @@ env/
 
 __pycache__/
 
-labyrinth/__pycache__/
+library/labyrinth/__pycache__/
 
-labyrinth/__init__.pyc
+library/labyrinth/__init__.pyc
 
-labyrinth/labyrinth.pyc
+library/labyrinth/labyrinth.pyc
 
-element/__pycache__/
+library/element/__pycache__/
 
-element/__init__.pyc
+library/element/__init__.pyc
 
-element/element.pyc
+library/element/element.pyc
 
-game/__pycache__/
+library/game_function/__pycache__/
 
-game/__init__.pyc
+library/game_function/__init__.pyc
 
-game/game.pyc
+library/game_function/game_function.pyc

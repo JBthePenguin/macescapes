@@ -1,8 +1,11 @@
 #! /usr/bin/env python3
 # coding: utf-8
+
 import os.path as path
 """ Module with class Element"""
-main_dir = path.dirname(path.dirname(__file__))
+main_dir = path.dirname(
+    path.dirname(
+        path.dirname(__file__)))
 
 
 class Element():
