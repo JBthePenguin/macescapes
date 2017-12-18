@@ -12,7 +12,7 @@ import pygame.event
 from pygame.locals import *
 
 
-def create_list(background):
+def create_available_positions(background):
     """ create a list of available positions"""
     available_positions = []
     for position in background:
@@ -36,24 +36,28 @@ def paste_background(window, background):
             y += 1
 
 
-def paste_elements(window, elements):
+def paste_objects(window, objects):
     """ paste the differents elements on the window
     with the corresponding image"""
-    for element in elements:
-        img = pygame.image.load(element.path_to_img).convert_alpha()
-        x = element.position[0] * 40
-        y = element.position[1] * 40
+    for obj in objects:
+        img = pygame.image.load(obj.path_to_img).convert_alpha()
+        x = obj.position[0] * 40
+        y = obj.position[1] * 40
         window.blit(img, (x, y))
 
 
-def move_player(player_position, background, key_event):
+def paste_objects_counter(window, objects):
+    pass
+
+
+def move_perso(perso_position, background, key_event):
     """check if the new position is possible
     and move the player if it's ok"""
     # create a list of possible new position
-    available_positions = create_list(background)
+    available_positions = create_available_positions(background)
     # find new position and set the movement
-    new_x = int(player_position[0]) / 40
-    new_y = int(player_position[1]) / 40
+    new_x = int(perso_position[0]) / 40
+    new_y = int(perso_position[1]) / 40
     movement_x = 0
     movement_y = 0
     if key_event == K_LEFT:
@@ -71,48 +75,38 @@ def move_player(player_position, background, key_event):
     # check if the new position is possible and move if it's ok
     new_position = (new_x, new_y)
     if new_position in available_positions:
-        player_position = player_position.move(
+        perso_position = perso_position.move(
             movement_x, movement_y)
-    return player_position
+    return perso_position
 
 
-def check_end_of_game(player_position, element, gui_display):
-    """chek if the game is finished
-    mac on the same place than bad_boy"""
-    player_position_x = int(player_position[0]) / 40
-    player_position_y = int(player_position[1]) / 40
-    if (player_position_x == element.position[0]) and (
-            player_position_y == element.position[1]):
-        gui_display = 0
-    return gui_display
-
-
-def launch(background, movable_elt, elements):
-    """launch the game on  gui """
+def play_game(background, perso, enemy, objects):
+    """launch the game on  gui and play it"""
     # create a window
     pygame.init()
-    window = pygame.display.set_mode((600, 600))
-    # create an object Rect for the player
-    player = pygame.image.load(movable_elt.path_to_img).convert_alpha()
-    player_position = player.get_rect(topleft=(40, 40))
-    # available_positions = create_list(background)
+    window = pygame.display.set_mode((600, 660))
+    # create an object Rect for the perso and the enemy
+    perso = pygame.image.load(perso.path_to_img).convert_alpha()
+    perso_position = perso.get_rect(topleft=(40, 40))
+    enemy = pygame.image.load(enemy.path_to_img).convert_alpha()
+    enemy_position = enemy.get_rect(topleft=(560, 360))
     # moving when the key reaims depressed
     pygame.key.set_repeat(400, 30)
     # keep the window open ...
     gui_display = 1
     while gui_display:
         for event in pygame.event.get():
-            # ... unless the window is closed
-            if event.type == QUIT:
+            # ... unless the window is closed or game is over
+            if (event.type == QUIT) or (perso_position == enemy_position):
                 gui_display = 0
             # move the player in the correct direction
             elif event.type == KEYDOWN:
-                player_position = move_player(
-                    player_position, background, event.key)
-                gui_display = check_end_of_game(
-                    player_position, elements[0], gui_display)
+                perso_position = move_perso(
+                    perso_position, background, event.key)
         # paste all on the window and refresh it
         paste_background(window, background)
-        paste_elements(window, elements)
-        window.blit(player, player_position)
+        paste_objects_counter(window, objects)
+        paste_objects(window, objects)
+        window.blit(enemy, enemy_position)
+        window.blit(perso, perso_position)
         pygame.display.flip()

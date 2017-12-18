@@ -18,7 +18,7 @@ def main():
     before running the game"""
     # create the labyrinth and make a list of availabe position
     background = Labyrinth()
-    available_positions = game_function.create_list(background)
+    available_positions = game_function.create_available_positions(background)
     # create the player (mac) and the end of the game (bad_boy)
     mac = Element("mac", (1, 1))
     bad_boy = Element("bad_boy", (14, 9))
@@ -33,9 +33,9 @@ def main():
     ether = Element("ether", choice(available_positions))
     available_positions.remove(ether.position)
     # create of list of the elements of the game
-    elements = [bad_boy, needle, tube, ether]
+    objects = [needle, tube, ether]
     # launch the game
-    game_function.launch(background, mac, elements)
+    game_function.play_game(background, mac, bad_boy, objects)
 
 
 if __name__ == "__main__":
