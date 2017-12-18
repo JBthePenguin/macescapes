@@ -13,7 +13,7 @@ main_dir = path.dirname(
 class Labyrinth(dict):
     """docstring for Labyrinth : Class object =
     {position xy : path towards the corresponding img}"""
-    def __init__(self):
+    def __init__(self, size_img):
         """create a labyrinth with florr and wall"""
         # get the right path to the map's file and open it
         path_to_file = path.join(
@@ -27,7 +27,7 @@ class Labyrinth(dict):
                 if elt == "\n":
                     # update next position
                     x = 0
-                    y += 1
+                    y += size_img[1]
                 else:
                     # get the right path to image
                     if elt == "O":
@@ -39,4 +39,4 @@ class Labyrinth(dict):
                     # add key (x,y) and value (path to the file) in background
                     self[(x, y)] = path_to_img
                     # update position
-                    x += 1
+                    x += size_img[0]

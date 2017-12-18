@@ -16,12 +16,14 @@ import library.game_function.game_function as game_function
 def main():
     """ create the background, the player and the other elements
     before running the game"""
+    # set the size of one image in pixels
+    size_img = (40, 40)
     # create the labyrinth and make a list of availabe position
-    background = Labyrinth()
+    background = Labyrinth(size_img)
     available_positions = game_function.create_available_positions(background)
-    # create the player (mac) and the end of the game (bad_boy)
-    mac = Element("mac", (1, 1))
-    bad_boy = Element("bad_boy", (14, 9))
+    # create MacGyver and the enemy and set the start position
+    mac = Element("mac", (40, 40))
+    bad_boy = Element("bad_boy", (560, 360))
     # remove the positions of mac and bad_boy in the list
     available_positions.remove(mac.position)
     available_positions.remove(bad_boy.position)
@@ -35,7 +37,7 @@ def main():
     # create of list of the elements of the game
     objects = [needle, tube, ether]
     # launch the game
-    game_function.play_game(background, mac, bad_boy, objects)
+    game_function.play_game(background, mac, bad_boy, objects, size_img)
 
 
 if __name__ == "__main__":

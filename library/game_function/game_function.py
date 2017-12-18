@@ -21,19 +21,14 @@ def create_available_positions(background):
     return available_positions
 
 
-def paste_background(window, background):
+def paste_background(window, background, size_img):
     """ paste the background on the window
     with the corresponding image for each position"""
-    x = 0
-    y = 0
-    while y < 15:
-        img = pygame.image.load(background[(x, y)]).convert()
-        window.blit(img, ((x * 40), (y * 40)))
-        if x < 14:
-            x += 1
-        else:
-            x = 0
-            y += 1
+    for key in background:
+        img = pygame.image.load(background[key]).convert()
+        x = key[0]
+        y = key[1]
+        window.blit(img, (x, y))
 
 
 def paste_objects(window, objects):
@@ -41,8 +36,8 @@ def paste_objects(window, objects):
     with the corresponding image"""
     for obj in objects:
         img = pygame.image.load(obj.path_to_img).convert_alpha()
-        x = obj.position[0] * 40
-        y = obj.position[1] * 40
+        x = obj.position[0]
+        y = obj.position[1]
         window.blit(img, (x, y))
 
 
@@ -50,46 +45,46 @@ def paste_objects_counter(window, objects):
     pass
 
 
-def move_perso(perso_position, background, key_event):
+def move_perso(perso_position, background, key_event, size_img):
     """check if the new position is possible
     and move the player if it's ok"""
     # create a list of possible new position
     available_positions = create_available_positions(background)
-    # find new position and set the movement
-    new_x = int(perso_position[0]) / 40
-    new_y = int(perso_position[1]) / 40
+    # find the diection of the movement
+    new_position_x = perso_position[0]
+    new_position_y = perso_position[1]
     movement_x = 0
     movement_y = 0
     if key_event == K_LEFT:
-        new_x -= 1
-        movement_x = -40
+        new_position_x -= size_img[0]
+        movement_x = (-size_img[0])
     elif key_event == K_RIGHT:
-        new_x += 1
-        movement_x = 40
+        new_position_x += size_img[0]
+        movement_x = size_img[0]
     elif key_event == K_UP:
-        new_y -= 1
-        movement_y = -40
+        new_position_y -= size_img[1]
+        movement_y = -size_img[1]
     elif key_event == K_DOWN:
-        new_y += 1
-        movement_y = 40
+        new_position_y += size_img[1]
+        movement_y = size_img[1]
     # check if the new position is possible and move if it's ok
-    new_position = (new_x, new_y)
+    new_position = (new_position_x, new_position_y)
     if new_position in available_positions:
         perso_position = perso_position.move(
             movement_x, movement_y)
     return perso_position
 
 
-def play_game(background, perso, enemy, objects):
+def play_game(background, perso, enemy, objects, size_img):
     """launch the game on  gui and play it"""
     # create a window
     pygame.init()
-    window = pygame.display.set_mode((600, 660))
+    window = pygame.display.set_mode((600, 600))
     # create an object Rect for the perso and the enemy
-    perso = pygame.image.load(perso.path_to_img).convert_alpha()
-    perso_position = perso.get_rect(topleft=(40, 40))
-    enemy = pygame.image.load(enemy.path_to_img).convert_alpha()
-    enemy_position = enemy.get_rect(topleft=(560, 360))
+    perso_gui = pygame.image.load(perso.path_to_img).convert_alpha()
+    perso_gui_position = perso_gui.get_rect(topleft=perso.position)
+    enemy_gui = pygame.image.load(enemy.path_to_img).convert_alpha()
+    enemy_gui_position = enemy_gui.get_rect(topleft=enemy.position)
     # moving when the key reaims depressed
     pygame.key.set_repeat(400, 30)
     # keep the window open ...
@@ -97,16 +92,17 @@ def play_game(background, perso, enemy, objects):
     while gui_display:
         for event in pygame.event.get():
             # ... unless the window is closed or game is over
-            if (event.type == QUIT) or (perso_position == enemy_position):
+            if (event.type == QUIT) or (
+                    perso_gui_position == enemy_gui_position):
                 gui_display = 0
             # move the player in the correct direction
             elif event.type == KEYDOWN:
-                perso_position = move_perso(
-                    perso_position, background, event.key)
+                perso_gui_position = move_perso(
+                    perso_gui_position, background, event.key, size_img)
         # paste all on the window and refresh it
-        paste_background(window, background)
+        paste_background(window, background, size_img)
         paste_objects_counter(window, objects)
         paste_objects(window, objects)
-        window.blit(enemy, enemy_position)
-        window.blit(perso, perso_position)
+        window.blit(enemy_gui, enemy_gui_position)
+        window.blit(perso_gui, perso_gui_position)
         pygame.display.flip()
