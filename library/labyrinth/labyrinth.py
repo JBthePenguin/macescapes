@@ -40,3 +40,6 @@ class Labyrinth(dict):
                     self[(x, y)] = path_to_img
                     # update position
                     x += size_img[0]
+            # add the counter:
+        self[(0, (y + size_img[1]))] = path.join(
+            main_dir, "img", "counter.png")
