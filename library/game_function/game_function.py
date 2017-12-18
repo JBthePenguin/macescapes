@@ -76,6 +76,17 @@ def move_player(player_position, background, key_event):
     return player_position
 
 
+def check_end_of_game(player_position, element, gui_display):
+    """chek if the game is finished
+    mac on the same place than bad_boy"""
+    player_position_x = int(player_position[0]) / 40
+    player_position_y = int(player_position[1]) / 40
+    if (player_position_x == element.position[0]) and (
+            player_position_y == element.position[1]):
+        gui_display = 0
+    return gui_display
+
+
 def launch(background, movable_elt, elements):
     """launch the game on  gui """
     # create a window
@@ -98,6 +109,8 @@ def launch(background, movable_elt, elements):
             elif event.type == KEYDOWN:
                 player_position = move_player(
                     player_position, background, event.key)
+                gui_display = check_end_of_game(
+                    player_position, elements[0], gui_display)
         # paste all on the window and refresh it
         paste_background(window, background)
         paste_elements(window, elements)
