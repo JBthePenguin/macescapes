@@ -2,23 +2,14 @@
 # coding: utf-8
 
 import os.path
-
 from random import choice
-
 import pygame.display
-
 import pygame.image
-
 import pygame.event
-
 import pygame.font
-
 from pygame.locals import *
-
 from library.background.background import Background
-
 from library.element.element import Element
-
 import library.game_function.game_function as game_function
 
 
@@ -41,15 +32,15 @@ def main():
     path_to_ether = os.path.join(main_dir, "img", "ether.png")
 
     # set the size of image and window
-    size_img = (40, 40)
-    size_window = (600, 660)
+    size_img = (45, 45)
+    size_window = (675, 720)
 
     # create the labyrinth, MacGyver and the Bad Guy with start position
     labyrinth = Background(
         path_to_map, path_to_wall,
-        path_to_floor, path_to_counter_background, size_img)
-    mac = Element(path_to_mac, (40, 40))
-    bad_guy = Element(path_to_bad_guy, (560, 360))
+        path_to_floor, size_img, path_to_counter_background)
+    mac = Element(path_to_mac, (45, 45))
+    bad_guy = Element(path_to_bad_guy, (630, 405))
 
     # remove the positions of mac and bad_boy as avalaible position
     labyrinth.available_positions.remove(mac.position)
@@ -63,11 +54,11 @@ def main():
     ether = Element(path_to_ether, choice(labyrinth.available_positions))
     labyrinth.available_positions.remove(ether.position)
 
-    # create of list of the objects and initialise avalaible position
+    # create a list of objects and initialise avalaible position
     objects = [needle, tube, ether]
     labyrinth.__init__(
         path_to_map, path_to_wall,
-        path_to_floor, path_to_counter_background, size_img)
+        path_to_floor, size_img, path_to_counter_background)
 
     # !!!!! OPEN the gui !!!!!
     pygame.init()
@@ -75,7 +66,7 @@ def main():
 
     # create object Surface for each zone of background
     for key in labyrinth:
-        img = pygame.image.load(labyrinth[key]).convert()
+        img = pygame.image.load(labyrinth[key]).convert_alpha()
         labyrinth[key] = img
 
     # create an object Rect for the player
@@ -89,7 +80,7 @@ def main():
 
     # create a the counter of objects recovered:
     objects_recovered = 0
-    count_font = pygame.font.SysFont('Comic Sans MS', 80)
+    count_font = pygame.font.SysFont('Comic Sans MS', 50)
 
     # moving when the key reaims depressed
     pygame.key.set_repeat(400, 30)
@@ -134,9 +125,7 @@ def main():
         # counter
         counter = count_font.render(
             str(objects_recovered), False, (247, 9, 9))
-        window.blit(counter, (
-            ((size_window[0] + size_img[0]) / 2), (
-                size_window[1] - (1.2 * (size_img[1])))))
+        window.blit(counter, (375, 682))
         # finish point
         window.blit(end_point, bad_guy.position)
         # player
