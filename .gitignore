@@ -2,11 +2,11 @@ env/
 
 __pycache__/
 
-library/labyrinth/__pycache__/
+library/background/__pycache__/
 
-library/labyrinth/__init__.pyc
+library/background/__init__.pyc
 
-library/labyrinth/labyrinth.pyc
+library/background/background.pyc
 
 library/element/__pycache__/
 
