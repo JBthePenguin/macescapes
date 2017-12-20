@@ -10,26 +10,25 @@ import pygame.font
 from pygame.locals import *
 from library.background.background import Background
 from library.element.element import Element
-import library.game_function.game_function as game_function
 
 
 def main():
     """ create the background, the player and the other elements
-    before running the game"""
+    before, run the gui and play the game """
 
     # find the path to default_map.txt, and all images for :
-    # images for background and the counter background
+    # background and the counter background
     # all elements : mac, bad_guy, needle tube, ether
     main_dir = os.path.dirname(__file__)
-    path_to_map = os.path.join(main_dir, "maps", "default_map.txt")
-    path_to_counter_background = os.path.join(main_dir, "img", "counter.png")
-    path_to_wall = os.path.join(main_dir, "img", "wall.png")
-    path_to_floor = os.path.join(main_dir, "img", "floor.png")
-    path_to_mac = os.path.join(main_dir, "img", "mac.png")
-    path_to_bad_guy = os.path.join(main_dir, "img", "bad_guy.png")
-    path_to_needle = os.path.join(main_dir, "img", "needle.png")
-    path_to_tube = os.path.join(main_dir, "img", "tube.png")
-    path_to_ether = os.path.join(main_dir, "img", "ether.png")
+    path_to_map = main_dir + "/maps/default_map.txt"
+    path_to_counter_background = main_dir + "/img/counter.png"
+    path_to_wall = main_dir + "/img/wall.png"
+    path_to_floor = main_dir + "/img/floor.png"
+    path_to_mac = main_dir + "/img/mac.png"
+    path_to_bad_guy = main_dir + "/img/bad_guy.png"
+    path_to_needle = main_dir + "/img/needle.png"
+    path_to_tube = main_dir + "/img/tube.png"
+    path_to_ether = main_dir + "/img/ether.png"
 
     # set the size of image and window
     size_img = (45, 45)
@@ -39,30 +38,41 @@ def main():
     labyrinth = Background(
         path_to_map, path_to_wall,
         path_to_floor, size_img, path_to_counter_background)
-    mac = Element(path_to_mac, (45, 45))
-    bad_guy = Element(path_to_bad_guy, (630, 405))
+    mac = Element(path_to_mac, (45, 45), "player")
+    bad_guy = Element(path_to_bad_guy, (630, 405), "end")
 
     # remove the positions of mac and bad_boy as avalaible position
     labyrinth.available_positions.remove(mac.position)
     labyrinth.available_positions.remove(bad_guy.position)
 
-    # random choice for position of the 3 other elements
-    needle = Element(path_to_needle, choice(labyrinth.available_positions))
+    # random choice for position and create the 3 other elements
+    needle = Element(
+        path_to_needle, choice(labyrinth.available_positions),
+        "recoverable")
     labyrinth.available_positions.remove(needle.position)
-    tube = Element(path_to_tube, choice(labyrinth.available_positions))
+    tube = Element(
+        path_to_tube, choice(labyrinth.available_positions),
+        "recoverable")
     labyrinth.available_positions.remove(tube.position)
-    ether = Element(path_to_ether, choice(labyrinth.available_positions))
+    ether = Element(
+        path_to_ether, choice(labyrinth.available_positions),
+        "recoverable")
     labyrinth.available_positions.remove(ether.position)
 
-    # create a list of objects and initialise avalaible position
-    objects = [needle, tube, ether]
+    # create a list of game's elements except the player
+    game_elements = [bad_guy, needle, tube, ether]
+
+    # initialise available positions of the labyrinth
     labyrinth.__init__(
         path_to_map, path_to_wall,
         path_to_floor, size_img, path_to_counter_background)
 
     # !!!!! OPEN the gui !!!!!
+    # create a window
     pygame.init()
     window = pygame.display.set_mode(size_window)
+    # moving when the key reaims depressed
+    pygame.key.set_repeat(400, 30)
 
     # create object Surface for each zone of background
     for key in labyrinth:
@@ -70,29 +80,25 @@ def main():
         labyrinth[key] = img
 
     # create an object Rect for the player
-    player = pygame.image.load(mac.img).convert_alpha()
-    player_position = player.get_rect(topleft=mac.position)
+    mac_img = pygame.image.load(mac.img).convert_alpha()
+    mac_rect = mac_img.get_rect(topleft=mac.position)
 
-    # create object Surface bad_guy and for each object
-    end_point = pygame.image.load(bad_guy.img).convert_alpha()
-    for obj in objects:
-            obj.img = pygame.image.load(obj.img).convert_alpha()
+    # create object Surface for each other element
+    for element in game_elements:
+        element.img = pygame.image.load(element.img).convert_alpha()
 
-    # create a the counter of objects recovered:
-    objects_recovered = 0
-    count_font = pygame.font.SysFont('Comic Sans MS', 50)
-
-    # moving when the key reaims depressed
-    pygame.key.set_repeat(400, 30)
+    # initialize and create object Front for the counter:
+    elements_recovered = 0
+    count_font = pygame.font.SysFont('Comic Sans MS', 40)
 
     # keep the window open ...
     gui_display = 1
     while gui_display:
         for event in pygame.event.get():
-            if event.type == QUIT:  # close window
+            if event.type == QUIT:  # if window is closed
                 gui_display = 0
-
-            elif event.type == KEYDOWN:  # find the direction
+            elif event.type == KEYDOWN:  # if the keyboard is used
+                # find the direction
                 if event.key == K_LEFT:
                     direction = "left"
                 elif event.key == K_RIGHT:
@@ -101,35 +107,37 @@ def main():
                     direction = "up"
                 elif event.key == K_DOWN:
                     direction = "down"
-
-                # move the player in the correct direction
-                player_position = game_function.move_player(
-                    player_position, labyrinth.available_positions,
-                    direction, size_img)
-
-                # check the position with objects and update it
-                objects, objects_recovered = game_function.check_position(
-                    player_position, objects, objects_recovered,
-                    size_img, size_window)
-                gui_display = game_function.check_win(
-                    player_position, bad_guy.position)
-
+                # check if the movement is possible
+                movement = mac.find_movement(
+                    labyrinth.available_positions, direction, size_img)
+                if movement != 0:
+                    # move the player
+                    mac_rect = mac_rect.move(movement)
+                    # check the new position of player with other elements
+                    for element in game_elements:
+                        if (mac.position[0] == element.position[0]) and (
+                                mac.position[1] == element.position[1]):
+                            # check the type of element
+                            if element.feature == "recoverable":
+                                # update the counter
+                                elements_recovered += 1
+                                # put element in the background counter
+                                x = size_window[0] - (
+                                    size_img[0] * elements_recovered * 1.5)
+                                y = size_window[1] - size_img[1]
+                                element.position = (x, y)
+                            else:
+                                gui_display = 0  # !!!! WIN!!!
         # display on gui
         # paste all on the window and refresh it
-        # background
         for key in labyrinth:
             window.blit(labyrinth[key], key)
-        # objects
-        for obj in objects:
-            window.blit(obj.img, obj.position)
-        # counter
+        for element in game_elements:
+            window.blit(element.img, element.position)
         counter = count_font.render(
-            str(objects_recovered), False, (247, 9, 9))
-        window.blit(counter, (375, 682))
-        # finish point
-        window.blit(end_point, bad_guy.position)
-        # player
-        window.blit(player, player_position)
+            str(elements_recovered), False, (247, 9, 9))
+        window.blit(counter, (375, 668))
+        window.blit(mac_img, mac_rect)
         # refresh window
         pygame.display.flip()
 
