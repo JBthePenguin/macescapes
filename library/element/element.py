@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-# """ Module with class Element"""
+""" Module with class Element"""
 
 
 class Element():
@@ -16,7 +16,7 @@ class Element():
         self.position = position
         self.feature = feature
 
-    def find_movement(self, available_positions, direction, size_img):
+    def test_movement(self, available_positions, direction, size_img):
         """check if movement in a direction is available,
         update the element position and return the movement.
         available_position : list
