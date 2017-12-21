@@ -3,14 +3,37 @@
 
 How to run?
 
-1.Download the directory
+1.Download the directory macescapes
 
 
-2. Install requirements:
+2.Go inside:
+
+cd macescapes
+
+
+3.Create a virtual environment for python with virtualenv (!!!maybe you have to install virtualenv!!!)
+
+virtualenv -p python3 env
+
+
+4.Use it
+
+source env/bin/activate
+
+
+5. Install requirements with Pip (!!!maybe you have to install it!!!):
 
 pip install PyGame
 
+or
 
-3. Play:
+pip install -r requirements.txt
 
-python macescapes
+
+6. Play:
+
+python .
+
+or
+
+python __main__.py

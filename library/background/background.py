@@ -8,7 +8,7 @@ class Background(dict):
     """docstring for Background : background with wall, floor
     a background for a counter and a list of available positions"""
 
-    def __init__(self, map, wall, floor, size_img, counter_background):
+    def __init__(self, map, wall, floor, counter_background, size_img):
         """create a background with the path to:
         map : file .txt
         wall: image .png
