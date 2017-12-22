@@ -1,7 +1,11 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-""" Play the game """
+""" imports all necessary modules, get all paths to images,
+set default size image and start/end positions
+and launch the game : main() """
+
+# pylint: disable=no-name-in-module
 
 # import from standard modules
 from os.path import dirname as path_dirname
@@ -36,10 +40,8 @@ PATH_TO_TUBE = MAIN_DIR + "/img/tube.png"
 PATH_TO_ETHER = MAIN_DIR + "/img/ether.png"
 PATH_TO_POISON = MAIN_DIR + "/img/poison.png"
 
-# set the size of image and windo, the position of counter, start point
+# set the size of image, start and end points
 SIZE_IMG = (45, 45)
-SIZE_WINDOW = (675, 720)
-COUNTER_POSITION = (365, 675)
 START_POINT = (45, 45)
 END_POINT = (630, 405)
 
@@ -51,8 +53,7 @@ def main():
     # !! create all the variables necessary for the game !!
     # create the labyrinth, MacGyver and the Bad Guy with default positions
     labyrinth = Background(
-        PATH_TO_MAP, PATH_TO_WALL,
-        PATH_TO_FLOOR, PATH_TO_COUNTER_BG, SIZE_IMG)
+        PATH_TO_MAP, PATH_TO_WALL, PATH_TO_FLOOR, SIZE_IMG)
     mac = Element(PATH_TO_MAC, START_POINT, "player", SIZE_IMG)
     bad_guy = Element(PATH_TO_BAD_GUY, END_POINT, "end", SIZE_IMG)
     # remove the positions of mac and bad_guy in avalaible positions
@@ -73,18 +74,18 @@ def main():
     labyrinth.available_positions.remove(ether.position)
     # create the poison : appear in counter when all elements are founded
     poison = Element(PATH_TO_POISON, (
-        (SIZE_WINDOW[0] - SIZE_IMG[0]), (
-            SIZE_WINDOW[1] - SIZE_IMG[1])), "", SIZE_IMG)
+        (labyrinth.size_window[0] - SIZE_IMG[0]), (
+            labyrinth.size_window[1] - SIZE_IMG[1])), "", SIZE_IMG)
     # create a list of game's elements
     game_elements = [mac, bad_guy, needle, tube, ether, poison]
     # initialise available positions of the labyrinth
-    labyrinth.__init__(
-        PATH_TO_MAP, PATH_TO_WALL,
-        PATH_TO_FLOOR, PATH_TO_COUNTER_BG, SIZE_IMG)
+    labyrinth.__init__(PATH_TO_MAP, PATH_TO_WALL, PATH_TO_FLOOR, SIZE_IMG)
+    # add the background for counter
+    labyrinth[(0, labyrinth.counter_position[1])] = PATH_TO_COUNTER_BG
     # !! create the gui !!
     # create a window
     pg_init()
-    window = pg_set_mode(SIZE_WINDOW)
+    window = pg_set_mode(labyrinth.size_window)
     # set moving when the key reaims depressed
     pg_set_repeat(400, 30)
     # create object Surface for each zone of background
@@ -99,7 +100,7 @@ def main():
     # initialize the counter and the list of elements:
     game_elements.remove(mac)
     game_elements.remove(poison)
-    elements_recovered = 0
+    counter_elts_founded = 0
     # keep the window open ...
     gui_display = 1
     while gui_display:
@@ -107,10 +108,15 @@ def main():
             if event.type == QUIT:  # if window is closed
                 gui_display = 0
             elif event.type == KEYDOWN:  # if the keyboard is used
-                mac, mac_rect, game_elements, elements_recovered = play_game(
-                    event, mac, mac_rect, game_elements, elements_recovered,
-                    poison, labyrinth.available_positions,
-                    COUNTER_POSITION, START_POINT)
+                mac, mac_rect, game_elements, counter_elts_founded = play_game(
+                    event, mac, mac_rect, game_elements, counter_elts_founded,
+                    labyrinth)
+                if counter_elts_founded == 3:
+                    # put poison if all elements are recovered
+                    game_elements.append(poison)
+                # put the player at start position if he lose
+                elif counter_elts_founded == "stays in prison!!!":
+                    mac_rect = mac.img.get_rect(topleft=START_POINT)
         # paste all on the window
         # background
         for key in labyrinth:
@@ -120,13 +126,13 @@ def main():
             window.blit(element.img, element.position)
         # counter
         window.blit(pg_SysFont('Comic Sans MS', 30).render(
-            str(elements_recovered), False, (247, 9, 9)), COUNTER_POSITION)
+            str(counter_elts_founded), False, (
+                247, 9, 9)), labyrinth.counter_position)
         # player
         window.blit(mac.img, mac_rect)
         # refresh window
         pg_flip()
-        if (elements_recovered == "escapes!!!") or (
-                elements_recovered == "stays in prison!!!"):
+        if counter_elts_founded.__class__ is "".__class__:
             # close window if player on end point
             gui_display = 0
             sleep(2)

@@ -3,6 +3,8 @@
 
 """ Module with class Element"""
 
+# pylint: disable=too-few-public-methods
+
 
 class Element():
     """ game's element with a position, a path to the
@@ -22,7 +24,7 @@ class Element():
     def check_movement(self, available_positions, direction):
         """check if movement in a direction is available,
         update the element position and return the movement.
-        available_position : list
+        available_positions : list of tuples (x,y)
         direction : str 'left', 'right', 'up', 'down'"""
 
         # set position before the movement
@@ -51,26 +53,4 @@ class Element():
             self.position = new_position
             # return the movement
             return movement_x, movement_y
-        return 0
-
-    def check_position(self, elements, elements_recovered, counter_position):
-        """check if element (self) is in the same position of other
-        element, update the number of elements recovered if is
-        an recoverable element and put it in the counter before return it.
-        elements : list of game's elements except self
-        elements_recovered : int
-        counter_position : tuple (x, y)"""
-
-        # check the new position of player with other elements
-        for element in elements:
-            if (self.position[0] == element.position[0]) and (
-                    self.position[1] == element.position[1]):
-                # check the type of element
-                if element.feature == "recoverable":
-                    # put element in the background counter
-                    position_x = counter_position[0] + self.size_img[0] + (
-                        1.5 * elements_recovered * self.size_img[0])
-                    position_y = counter_position[1]
-                    element.position = (position_x, position_y)
-                return element
         return 0
