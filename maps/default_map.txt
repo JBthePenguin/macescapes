@@ -8,7 +8,7 @@ O O  OOOOOOOO O
 O O      O O  O
 O OOOOOO O   OO
 O        O     
-O OOOOOO OOOOOO
+O OOOOOO OOOO O
 O O      O    O
 O OOOO O OOOO O
 O      O      O

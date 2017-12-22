@@ -5,32 +5,30 @@
 
 
 class Background(dict):
-    """docstring for Background : background with wall, floor
-    a background for a counter and a list of available positions"""
+    """game's background with wall, floor, a background for a counter
+    and a list of available positions"""
 
-    def __init__(self, map, wall, floor, counter_background, size_img):
-        """create a background with the path to:
-        map : file .txt
-        wall: image .png
-        floor : image .png
-        size_img : size of one image in pixel (x, y)
-        counter_background : image .png
-        """
+    def __init__(self, map_file, wall, floor, counter_background, size_img):
+        """create a background with
+        map_file : str 'path/to/file.txt'
+        wall: str 'path/to/image'
+        floor : str 'path/to/image'
+        counter_background : str 'path/to/image'
+        size_img : tuple (x, y)"""
 
-        # initialize a property : list of available positions
+        # initialize a list of available positions
         self.available_positions = []
-
         # read the .txt with the background
-        with open(map, "r") as f:
+        with open(map_file, "r") as background:
             # Initialize position
-            x = 0
-            y = 0
+            position_x = 0
+            position_y = 0
             # read character by character
-            for elt in f.read():
+            for elt in background.read():
                 if elt == "\n":
                     # update next position
-                    x = 0
-                    y += size_img[1]
+                    position_x = 0
+                    position_y += size_img[1]
                 else:
                     # get corresponding image
                     if elt == "O":
@@ -38,11 +36,11 @@ class Background(dict):
                     else:
                         img = floor
                         # update available positions
-                        self.available_positions.append((x, y))
+                        self.available_positions.append(
+                            (position_x, position_y))
                     # add key (x,y) and value img in background
-                    self[(x, y)] = img
+                    self[(position_x, position_y)] = img
                     # update position
-                    x += size_img[0]
-
+                    position_x += size_img[0]
         # add background for the counter:
-        self[(0, (y + size_img[1]))] = counter_background
+        self[(0, (position_y + size_img[1]))] = counter_background

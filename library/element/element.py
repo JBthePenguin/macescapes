@@ -5,14 +5,14 @@
 
 
 class Element():
-    """docstring for Element : element with
-    a position, a path to the corresponding image and a feature"""
+    """ game's element with a position, a path to the
+    corresponding image and his size, and a feature"""
 
     def __init__(self, img, position, feature, size_img):
         """create an element with
-        img :  path to the image
+        img :  str 'path/to/image'
         position: tuple (x, y)
-        feature:  'player' or 'recoverable' or 'end'
+        feature:  str 'player' or 'recoverable' or 'end'
         size_img : tuple (x, y)"""
         self.img = img
         self.position = position
@@ -24,6 +24,7 @@ class Element():
         update the element position and return the movement.
         available_position : list
         direction : str 'left', 'right', 'up', 'down'"""
+
         # set position before the movement
         new_position_x = self.position[0]
         new_position_y = self.position[1]
@@ -50,16 +51,16 @@ class Element():
             self.position = new_position
             # return the movement
             return movement_x, movement_y
-        else:
-            return 0
+        return 0
 
     def check_position(self, elements, elements_recovered, counter_position):
-        """check if an element (self) is in the same position of an
-        other element, update the number of elements recovered if is
+        """check if element (self) is in the same position of other
+        element, update the number of elements recovered if is
         an recoverable element and put it in the counter before return it.
         elements : list of game's elements except self
         elements_recovered : int
         counter_position : tuple (x, y)"""
+
         # check the new position of player with other elements
         for element in elements:
             if (self.position[0] == element.position[0]) and (
@@ -67,9 +68,9 @@ class Element():
                 # check the type of element
                 if element.feature == "recoverable":
                     # put element in the background counter
-                    x = counter_position[0] + self.size_img[0] + (
+                    position_x = counter_position[0] + self.size_img[0] + (
                         1.5 * elements_recovered * self.size_img[0])
-                    y = counter_position[1]
-                    element.position = (x, y)
+                    position_y = counter_position[1]
+                    element.position = (position_x, position_y)
                 return element
         return 0
