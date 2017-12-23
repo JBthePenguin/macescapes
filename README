@@ -36,4 +36,4 @@ python .
 
 or
 
-python __main__.py
+python ./__main__.py
